@@ -48,7 +48,8 @@ uv sync
 
 3. Install pre-commit hooks:
 ```bash
-source .venv/bin/activate
+source .venv/bin/activate # if Linux environment
+source .venv/Scripts/activate # if windows environment
 pip install pre-commit
 pre-commit install
 ```
