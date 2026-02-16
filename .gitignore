@@ -149,5 +149,6 @@ uv.lock
 .DS_Store
 Thumbs.db
 
-# Data files
-data/
+# Data files (ignore contents but keep folder structure)
+data/*
+!data/.gitkeep

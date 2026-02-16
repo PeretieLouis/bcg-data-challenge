@@ -1,0 +1,5 @@
+# Data Directory
+
+This directory contains project data files.
+
+**Note:** Make sure to add large data files to `.gitignore` if they shouldn't be tracked in version control.
