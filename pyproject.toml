@@ -4,7 +4,14 @@ version = "0.1.0"
 description = "BCG Data Challenge"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "ipython>=9.10.0",
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.2",
+    "pandas>=3.0.0",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.6",
+]
 
 [project.optional-dependencies]
 dev = [
