@@ -16,21 +16,29 @@
 
 ```
 bcg-data-challenge/
-├── .github/
-│   └── workflows/
-│       └── ci.yaml          # GitHub Actions CI/CD pipeline
-├── data/                     # Data files directory
-├── src/                      # Source code directory
-├── .gitignore               # Git ignore rules
-├── .pre-commit-config.yaml  # Pre-commit hooks configuration
-└── README.md                # This file
+├── data/
+│   ├── bronze/              # Raw data (CSV, parquet)
+│   ├── silver/              # Cleaned data
+│   └── gold/                # Feature-engineered data
+├── src/
+│   ├── data_processing/     # Data pipelines
+│   │   ├── bronze_to_silver.py
+│   │   └── silver_to_gold.py
+│   ├── modeling/            # ML training & evaluation
+│   │   ├── train.py
+│   │   └── evaluate.py
+│   └── utils/               # Helper functions
+├── results/                 # Model outputs & predictions
+├── configs/                 # Configuration files
+├── notebooks/               # Jupyter notebooks
+
 ```
 
 ## Setup
 
 ### Prerequisites
 
-- Python 3.13
+- Python 3.13+
 - [UV](https://github.com/astral-sh/uv) for dependency management
 
 ### Installation
@@ -41,56 +49,103 @@ pip install pipx && pipx ensurepath
 pipx install uv
 ```
 
-2. Install dependencies:
+2. Clone and install dependencies:
 ```bash
+git clone <repo-url>
+cd bcg-data-challenge
 uv sync
 ```
 
 3. Install pre-commit hooks:
 ```bash
-source .venv/bin/activate # if Linux environment
-source .venv/Scripts/activate # if windows environment
-pip install pre-commit
-pre-commit install
+uv run pre-commit install
 ```
+
+## Usage
+
+### 1. Data Processing Pipeline
+
+**Bronze to Silver** (clean raw data):
+```bash
+uv run python src/data_processing/bronze_to_silver.py
+```
+
+**Silver to Gold** (feature engineering):
+```bash
+uv run python src/data_processing/silver_to_gold.py
+```
+
+### 2. Model Training
+
+Train XGBoost with Optuna hyperparameter optimization:
+```bash
+uv run python src/modeling/train.py
+```
+
+For quick testing with fewer trials:
+```bash
+uv run python -c "from src.modeling.train import run_training; run_training(n_trials=20)"
+```
+
+### 3. Model Evaluation
+
+View evaluation summary:
+```bash
+uv run python src/modeling/evaluate.py
+```
+
+### Full Pipeline
+
+Run the complete pipeline:
+```bash
+# 1. Process data
+uv run python src/data_processing/bronze_to_silver.py
+uv run python src/data_processing/silver_to_gold.py
+
+# 2. Train model (100 trials, ~10 min)
+uv run python src/modeling/train.py
+
+# 3. View results
+uv run python src/modeling/evaluate.py
+```
+
+## Output Files
+
+After training, results are saved to `results/`:
+
+| File | Description |
+|------|-------------|
+| `model.joblib` | Trained XGBoost model |
+| `best_params.json` | Optimized hyperparameters |
+| `metrics.json` | Cross-validation metrics |
+| `feature_importance.csv` | Feature rankings |
+| `cv_predictions.csv` | CV predictions for analysis |
+| `predictions_ssp*.csv` | Climate scenario predictions |
+
 
 ## Development
 
 ### Pre-commit Hooks
 
-This project uses pre-commit hooks to maintain code quality:
-
-- **Code Quality**:
-  - `ruff`: Fast Python linter with auto-fix
-  - `ruff-format`: Python code formatter
-
-- **File Validation**:
-  - `trailing-whitespace`: Remove trailing whitespace
-  - `end-of-file-fixer`: Ensure files end with a newline
-  - `check-toml`: Validate TOML files
-  - `check-yaml`: Validate YAML files
-  - `check-json`: Validate JSON files
-  - `check-added-large-files`: Prevent large files from being committed
-
-- **Notebook Management**:
-  - `nbstripout`: Strip output from Jupyter notebooks
-
-- **Dependency Management**:
-  - `uv-lock`: Keep dependency lock file in sync
-
-### Running Pre-commit Hooks Manually
+This project uses pre-commit hooks for code quality:
 
 ```bash
 # Run on all files
-pre-commit run --all-files
+uv run pre-commit run --all-files
 
 # Run specific hook
-pre-commit run ruff --all-files
+uv run pre-commit run ruff --all-files
 ```
+
+Hooks include:
+- `ruff`: Python linter with auto-fix
+- `ruff-format`: Code formatter
+- `nbstripout`: Strip notebook outputs
+- `uv-lock`: Sync dependency lock file
 
 ## CI/CD
 
 GitHub Actions automatically runs on every push and pull request:
 - Sets up Python 3.13
 - Installs dependencies via UV
-- Runs all pre-commit hooks with pre-push stage
+- Runs all pre-commit hooks

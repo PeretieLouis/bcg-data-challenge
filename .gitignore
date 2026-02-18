@@ -152,3 +152,16 @@ Thumbs.db
 # Data files (ignore contents but keep folder structure)
 data/*
 !data/.gitkeep
+!data/bronze/
+!data/silver/
+!data/gold/
+data/bronze/*
+data/silver/*
+data/gold/*
+!data/bronze/.gitkeep
+!data/silver/.gitkeep
+!data/gold/.gitkeep
+
+# Results (model files, predictions - too large for git)
+results/*
+!results/.gitkeep

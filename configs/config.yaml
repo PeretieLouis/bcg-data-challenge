@@ -1,0 +1,37 @@
+# BCG Data Challenge - Configuration
+# ===================================
+
+# Data paths
+data:
+  bronze_path: "data/bronze"
+  silver_path: "data/silver"
+  gold_path: "data/gold"
+
+# Feature engineering parameters
+features:
+  temperature_high_quantile: 0.95
+  temperature_low_quantile: 0.05
+  heatwave_threshold: 303  # Kelvin
+  heatwave_min_length: 3   # days
+  dry_days_quantile: 0.07
+  dry_days_min_length: 3
+
+# Model training parameters
+model:
+  target_column: "yield"
+  test_size: 0.2
+  random_state: 42
+
+# Optuna optimization
+optuna:
+  n_trials: 100
+  direction: "minimize"
+  metric: "rmse"
+
+# XGBoost default parameters
+xgboost:
+  n_estimators: 500
+  max_depth: 6
+  learning_rate: 0.1
+  subsample: 0.8
+  colsample_bytree: 0.8
