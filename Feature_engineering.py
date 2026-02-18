@@ -222,8 +222,8 @@ def imputating_yield_values(dataset):
 def building_final_df(scenario_dataset, barley_data, is_historical_data):
     """Combine all the functions above to add all additional variables.
     is_historical_data: bool variables that states whether scenario_dataset is historical or one of
-    the three scenarios. If false and is not historical, we drop the column yield. In all cases, we
-    drop area and production too."""
+    the three scenarios. If false and is not historical, we drop the column yield and we select only
+    values for year above 2018. In all cases, we drop area and production too."""
 
     dataset_to_merge = scenario_dataset.copy()
     dataset_to_merge = adding_nb_wet_days(dataset_to_merge)
@@ -261,5 +261,6 @@ def building_final_df(scenario_dataset, barley_data, is_historical_data):
 
     if not is_historical_data:
         final_df_to_model = final_df_to_model.drop(columns=["yield"])
+        final_df_to_model = final_df_to_model[final_df_to_model["year"] > 2018]
 
     return final_df_to_model
