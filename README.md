@@ -63,6 +63,8 @@ uv run pre-commit install
 
 ## Usage
 
+Make sure that the barely yield data and the climate data are in the bronze data folder
+
 ### 1. Data Processing Pipeline
 
 **Bronze to Silver** (clean raw data):
